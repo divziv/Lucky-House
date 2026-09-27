@@ -1,0 +1,6 @@
+{
+  "name": "Tambola Masti",
+  "description": "Call. Mark. Claim. Celebrate! Complete production-quality Tambola and Housie caller, interactive board, physical paper & virtual cards game.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
+@layer base {
+  :root {
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Light Theme (Primary/Default) — White and Blue */
+    --bg-page: #F5FAFF;
+    --card-bg: #FFFFFF;
+    --card-border: #D6E4F0;
+    --text-primary: #17324D;
+    --text-secondary: #607D8B;
+    
+    --primary-blue: #1565C0;
+    --bright-blue: #1976D2;
+    --light-blue: #E3F2FD;
+    --very-light-blue: #F5FAFF;
+    --border-color: #D6E4F0;
+    --color-success: #2E7D32;
+    --color-warning: #F9A825;
+    --color-error: #D32F2F;
+    --board-uncalled-bg: #FFFFFF;
+  }
+
+  /* Explicit light class */
+  html.light, :root:not(.dark) {
+    --bg-page: #F5FAFF;
+    --card-bg: #FFFFFF;
+    --card-border: #D6E4F0;
+    --text-primary: #17324D;
+    --text-secondary: #607D8B;
+
+    --primary-blue: #1565C0;
+    --bright-blue: #1976D2;
+    --light-blue: #E3F2FD;
+    --very-light-blue: #F5FAFF;
+    --border-color: #D6E4F0;
+    --color-success: #2E7D32;
+    --color-warning: #F9A825;
+    --color-error: #D32F2F;
+    --board-uncalled-bg: #FFFFFF;
+  }
+
+  /* Dark Theme — Dark Navy and Blue */
+  html.dark {
+    --bg-page: #0B1220;
+    --card-bg: #111827;
+    --card-border: #26354A;
+    --text-primary: #F8FAFC;
+    --text-secondary: #B0BEC5;
+
+    --primary-blue: #42A5F5;
+    --bright-blue: #64B5F6;
+    --light-blue: #172033;
+    --very-light-blue: #0B1220;
+    --border-color: #26354A;
+    --color-success: #66BB6A;
+    --color-warning: #FFCA28;
+    --color-error: #EF5350;
+    --board-uncalled-bg: #111827;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-mono-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom animations */
+@keyframes pulse-blue-glow {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(25, 118, 210, 0.45), inset 0 0 10px rgba(25, 118, 210, 0.25);
+    transform: scale(1.02);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(21, 101, 192, 0.75), inset 0 0 18px rgba(21, 101, 192, 0.45);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes call-number-pop {
+  0% {
+    transform: scale(0.3) rotate(-6deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(2deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(0.96) rotate(-1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Giant Pop Overlay Animation */
+@keyframes overlay-pop-in-out {
+  0% {
+    transform: scale(0.2) translateY(50px);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(1.15) translateY(-6px);
+    opacity: 1;
+  }
+  45% {
+    transform: scale(0.97) translateY(2px);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.02) translateY(0);
+    opacity: 1;
+  }
+  85% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.65) translateY(-35px);
+    opacity: 0;
+  }
+}
+
+/* Board Stamp Highlight Animation */
+@keyframes board-stamp-in {
+  0% {
+    transform: scale(2.2);
+    box-shadow: 0 0 40px rgba(25, 118, 210, 1);
+    filter: brightness(1.8);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(25, 118, 210, 0.5);
+    filter: brightness(1);
+  }
+}
+
+.animate-pulse-blue {
+  animation: pulse-blue-glow 2s infinite ease-in-out;
+}
+
+.animate-call-pop {
+  animation: call-number-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-overlay-pop {
+  animation: overlay-pop-in-out 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-board-stamp {
+  animation: board-stamp-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(227, 242, 253, 0.5);
+}
+.dark ::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(25, 118, 210, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(21, 101, 192, 0.7);
+}
