@@ -9,60 +9,90 @@
     --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    /* Light Theme (Primary/Default) — White and Blue */
+    /* Default Theme B — White & Blue */
     --bg-page: #F5FAFF;
     --card-bg: #FFFFFF;
+    --card-surface: #FFFFFF;
     --card-border: #D6E4F0;
     --text-primary: #17324D;
     --text-secondary: #607D8B;
     
-    --primary-blue: #1565C0;
-    --bright-blue: #1976D2;
-    --light-blue: #E3F2FD;
-    --very-light-blue: #F5FAFF;
+    --primary-accent: #1565C0;
+    --bright-accent: #1976D2;
+    --light-accent: #E3F2FD;
+    --very-light-accent: #F5FAFF;
     --border-color: #D6E4F0;
     --color-success: #2E7D32;
     --color-warning: #F9A825;
     --color-error: #D32F2F;
+    --current-number-color: #1565C0;
     --board-uncalled-bg: #FFFFFF;
   }
 
-  /* Explicit light class */
-  html.light, :root:not(.dark) {
+  /* Theme B — White & Blue (Explicit) */
+  html.theme-white-blue, html.light:not(.theme-white-pink):not(.theme-black-gold) {
     --bg-page: #F5FAFF;
     --card-bg: #FFFFFF;
+    --card-surface: #FFFFFF;
     --card-border: #D6E4F0;
     --text-primary: #17324D;
     --text-secondary: #607D8B;
 
-    --primary-blue: #1565C0;
-    --bright-blue: #1976D2;
-    --light-blue: #E3F2FD;
-    --very-light-blue: #F5FAFF;
+    --primary-accent: #1565C0;
+    --bright-accent: #1976D2;
+    --light-accent: #E3F2FD;
+    --very-light-accent: #F5FAFF;
     --border-color: #D6E4F0;
     --color-success: #2E7D32;
     --color-warning: #F9A825;
     --color-error: #D32F2F;
+    --current-number-color: #1565C0;
     --board-uncalled-bg: #FFFFFF;
   }
 
-  /* Dark Theme — Dark Navy and Blue */
-  html.dark {
-    --bg-page: #0B1220;
-    --card-bg: #111827;
-    --card-border: #26354A;
-    --text-primary: #F8FAFC;
-    --text-secondary: #B0BEC5;
+  /* Theme A — Royal Black & Gold (Primary Dark Theme) */
+  html.theme-black-gold, html.dark:not(.theme-white-pink):not(.theme-white-blue) {
+    --bg-page: #0B0B0B;
+    --card-bg: #171717;
+    --card-surface: #171717;
+    --card-border: #4A3A12;
+    --text-primary: #FFFFFF;
+    --text-secondary: #D6D6D6;
 
-    --primary-blue: #42A5F5;
-    --bright-blue: #64B5F6;
-    --light-blue: #172033;
-    --very-light-blue: #0B1220;
-    --border-color: #26354A;
+    --primary-accent: #D4AF37;
+    --bright-accent: #FFD54F;
+    --light-accent: #261E0A;
+    --very-light-accent: #151105;
+    --accent-orange: #FF9800;
+    --accent-yellow: #FFC107;
+    --border-color: #4A3A12;
     --color-success: #66BB6A;
-    --color-warning: #FFCA28;
+    --color-warning: #FFD54F;
     --color-error: #EF5350;
-    --board-uncalled-bg: #111827;
+    --current-number-color: #FFD54F;
+    --board-uncalled-bg: #171717;
+  }
+
+  /* Theme C — White & Pink (Cheerful, Friendly, Universal) */
+  html.theme-white-pink {
+    --bg-page: #FFF7FA;
+    --card-bg: #FFFFFF;
+    --card-surface: #FFFFFF;
+    --card-border: #F3D5DF;
+    --text-primary: #3E2731;
+    --text-secondary: #795E68;
+
+    --primary-accent: #D81B60;
+    --bright-accent: #EC407A;
+    --light-accent: #FCE4EC;
+    --very-light-accent: #FFF7FA;
+    --accent-deep: #AD1457;
+    --border-color: #F3D5DF;
+    --color-success: #2E7D32;
+    --color-warning: #F9A825;
+    --color-error: #D32F2F;
+    --current-number-color: #D81B60;
+    --board-uncalled-bg: #FFFFFF;
   }
 
   body {
@@ -72,6 +102,28 @@
     min-height: 100vh;
     overflow-x: hidden;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .theme-bg-page {
+    background-color: var(--bg-page) !important;
+  }
+  .theme-bg-card {
+    background-color: var(--card-bg) !important;
+  }
+  .theme-border {
+    border-color: var(--border-color) !important;
+  }
+  .theme-text-primary {
+    color: var(--text-primary) !important;
+  }
+  .theme-text-secondary {
+    color: var(--text-secondary) !important;
+  }
+  .theme-text-accent {
+    color: var(--primary-accent) !important;
+  }
+  .theme-bg-accent-subtle {
+    background-color: var(--light-accent) !important;
   }
 
   h1, h2, h3, .font-heading {

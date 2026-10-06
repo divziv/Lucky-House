@@ -111,13 +111,15 @@ export const PlayerTicketCard: React.FC<PlayerTicketCardProps> = ({
   };
 
   // Check achievements against called numbers
-  const fastFiveAchieved = verifyCardAchievement(card, 'fastFive', calledNumbers).completed;
-  const line1Achieved = verifyCardAchievement(card, 'firstLine', calledNumbers).completed;
-  const line2Achieved = verifyCardAchievement(card, 'secondLine', calledNumbers).completed;
-  const line3Achieved = verifyCardAchievement(card, 'thirdLine', calledNumbers).completed;
-  const fullHouseAchieved = verifyCardAchievement(card, 'fullHouse', calledNumbers).completed;
-  const lastFiveAchieved = config.prizes.lastFive > 0
-    ? verifyCardAchievement(card, 'lastFive', calledNumbers).completed
+  const fastFiveAchieved = config.prizes.fastFive?.enabled
+    ? verifyCardAchievement(card, 'fastFive', calledNumbers, config).completed
+    : false;
+  const line1Achieved = verifyCardAchievement(card, 'firstLine', calledNumbers, config).completed;
+  const line2Achieved = verifyCardAchievement(card, 'secondLine', calledNumbers, config).completed;
+  const line3Achieved = verifyCardAchievement(card, 'thirdLine', calledNumbers, config).completed;
+  const fullHouseAchieved = verifyCardAchievement(card, 'fullHouse', calledNumbers, config).completed;
+  const lastFiveAchieved = config.prizes.lastFive?.enabled && config.prizes.lastFive.winners > 0
+    ? verifyCardAchievement(card, 'lastFive', calledNumbers, config).completed
     : false;
 
   // Check eligibility for claims
@@ -127,36 +129,36 @@ export const PlayerTicketCard: React.FC<PlayerTicketCardProps> = ({
 
   const canClaimFastFive =
     fastFiveAchieved &&
-    config.prizes.fastFive > 0 &&
+    Boolean(config.prizes.fastFive?.enabled && config.prizes.fastFive.winners > 0) &&
     !wonCategories.includes('fastFive');
 
   const canClaimLine1 =
     line1Achieved &&
-    config.prizes.firstLine > 0 &&
+    Boolean(config.prizes.firstLine?.enabled && config.prizes.firstLine.winners > 0) &&
     !hasWonALine &&
     !wonCategories.includes('firstLine');
 
   const canClaimLine2 =
     line2Achieved &&
-    config.prizes.secondLine > 0 &&
+    Boolean(config.prizes.secondLine?.enabled && config.prizes.secondLine.winners > 0) &&
     !hasWonALine &&
     !wonCategories.includes('secondLine');
 
   const canClaimLine3 =
     line3Achieved &&
-    config.prizes.thirdLine > 0 &&
+    Boolean(config.prizes.thirdLine?.enabled && config.prizes.thirdLine.winners > 0) &&
     !hasWonALine &&
     !wonCategories.includes('thirdLine');
 
   const canClaimFullHouse =
     fullHouseAchieved &&
-    config.prizes.fullHouse > 0 &&
+    Boolean(config.prizes.fullHouse?.enabled && config.prizes.fullHouse.winners > 0) &&
     !wonCategories.includes('fullHouse') &&
     (fullHouseEligible || (!hasWonALine && !config.lineWinnerFullHouseEligibility));
 
   const canClaimLastFive =
     lastFiveAchieved &&
-    config.prizes.lastFive > 0 &&
+    Boolean(config.prizes.lastFive?.enabled && config.prizes.lastFive.winners > 0) &&
     !wonCategories.includes('lastFive');
 
   const totalCardCalled = card.allNumbers.filter((n) => calledSet.has(n)).length;

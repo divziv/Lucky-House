@@ -30,12 +30,12 @@ export function getDefaultGameConfig(mode: 'physical' | 'virtual' = 'physical'):
       end: 90,
     },
     prizes: {
-      fastFive: 1, // Always 1
-      firstLine: 1,
-      secondLine: 1,
-      thirdLine: 1,
-      fullHouse: 1,
-      lastFive: 0, // Disabled by default
+      fastFive: { enabled: true, winners: 1 },
+      firstLine: { enabled: true, winners: 1 },
+      secondLine: { enabled: true, winners: 1 },
+      thirdLine: { enabled: true, winners: 1 },
+      fullHouse: { enabled: true, winners: 1 },
+      lastFive: { enabled: false, winners: 0 },
     },
     lineWinnerFullHouseEligibility: true, // Line winners can continue for Full House
     voiceSettings: {
@@ -80,7 +80,7 @@ export function createNewGame(config: GameConfig): GameState {
 /**
  * Calls the next random number from the calling pool.
  * Never repeats a number.
- * Pauses after the 5th number is called.
+ * Pauses after the 5th number is called ONLY if Fast Five is enabled.
  */
 export function callNextNumber(state: GameState): { nextState: GameState; called: number | null } {
   if (state.numbersPool.length === 0) {
@@ -91,7 +91,9 @@ export function callNextNumber(state: GameState): { nextState: GameState; called
   const newCalledNumbers = [...state.calledNumbers, nextNumber];
 
   let newStatus = state.status;
-  if (newCalledNumbers.length === 5) {
+  const isFastFiveActive = state.config.prizes.fastFive.enabled && isPrizeAvailable(state, 'fastFive');
+
+  if (newCalledNumbers.length === 5 && isFastFiveActive) {
     newStatus = 'firstFivePaused';
   } else if (state.status === 'ready' || state.status === 'firstFivePaused') {
     newStatus = 'playing';
@@ -120,10 +122,10 @@ export function getWinnerCount(winners: WinnerRecord[], category: PrizeCategory)
  * Checks if a specific prize category still has winning spots available
  */
 export function isPrizeAvailable(state: GameState, category: PrizeCategory): boolean {
-  const allowed = state.config.prizes[category];
-  if (allowed <= 0) return false;
+  const prizeItem = state.config.prizes[category];
+  if (!prizeItem || !prizeItem.enabled || prizeItem.winners <= 0) return false;
   const currentCount = getWinnerCount(state.winners, category);
-  return currentCount < allowed;
+  return currentCount < prizeItem.winners;
 }
 
 /**
@@ -134,6 +136,11 @@ export function isPlayerEligibleForCategory(
   category: PrizeCategory,
   config: GameConfig
 ): { eligible: boolean; reason?: string } {
+  const prizeItem = config.prizes[category];
+  if (!prizeItem || !prizeItem.enabled || prizeItem.winners <= 0) {
+    return { eligible: false, reason: `${PRIZE_LABELS[category]} is not enabled for this game.` };
+  }
+
   if (player.wonCategories.includes(category)) {
     return { eligible: false, reason: `Player has already won ${PRIZE_LABELS[category]}` };
   }
@@ -164,8 +171,14 @@ export function isPlayerEligibleForCategory(
 export function verifyCardAchievement(
   card: PlayerCard,
   category: PrizeCategory,
-  calledNumbers: number[]
+  calledNumbers: number[],
+  config?: GameConfig
 ): { completed: boolean; matchedCount: number; targetCount: number } {
+  // If category is not enabled in config, do not detect victory
+  if (config && config.prizes[category] && !config.prizes[category].enabled) {
+    return { completed: false, matchedCount: 0, targetCount: 0 };
+  }
+
   const calledSet = new Set(calledNumbers);
 
   if (category === 'fastFive') {
@@ -231,10 +244,10 @@ export function verifyCardAchievement(
  */
 export function areAllConfiguredPrizesWon(state: GameState): boolean {
   const prizes = state.config.prizes;
-  for (const [cat, count] of Object.entries(prizes) as [PrizeCategory, number][]) {
-    if (count > 0) {
+  for (const [cat, item] of Object.entries(prizes) as [PrizeCategory, { enabled: boolean; winners: number }][]) {
+    if (item.enabled && item.winners > 0) {
       const current = getWinnerCount(state.winners, cat);
-      if (current < count) {
+      if (current < item.winners) {
         return false;
       }
     }

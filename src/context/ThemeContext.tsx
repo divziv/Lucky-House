@@ -1,41 +1,48 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AppTheme, ThemeMode } from '../types/tambola';
 
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type ActiveTheme = 'light' | 'dark';
+export type { AppTheme, ThemeMode };
 
 interface ThemeContextType {
   mode: ThemeMode;
-  theme: ActiveTheme;
+  theme: AppTheme;
+  isDark: boolean;
   toggleTheme: () => void;
   setThemeMode: (mode: ThemeMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const THEME_STORAGE_KEY = 'tambola_masti_theme';
+const THEME_STORAGE_KEY = 'tambola_masti_theme_v2';
+const LEGACY_STORAGE_KEY = 'tambola_masti_theme';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mode, setModeState] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
-      if (saved === 'light' || saved === 'dark' || saved === 'system') {
+      if (saved === 'black-gold' || saved === 'white-blue' || saved === 'white-pink' || saved === 'system') {
         return saved;
       }
+      // Check legacy key
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (legacy === 'dark') return 'black-gold';
+      if (legacy === 'light') return 'white-blue';
+      if (legacy === 'system') return 'system';
     }
-    // Default is explicitly Light Theme as required
-    return 'light';
+    // Default is explicitly White & Blue theme
+    return 'white-blue';
   });
 
-  const [activeTheme, setActiveTheme] = useState<ActiveTheme>('light');
+  const [activeTheme, setActiveTheme] = useState<AppTheme>('white-blue');
 
   // Resolve active theme based on mode & system preference
   useEffect(() => {
-    const resolveTheme = (): ActiveTheme => {
+    const resolveTheme = (): AppTheme => {
       if (mode === 'system') {
         if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
+          return 'black-gold';
         }
-        return 'light';
+        return 'white-blue';
       }
       return mode;
     };
@@ -44,28 +51,32 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setActiveTheme(resolved);
 
     const root = document.documentElement;
-    if (resolved === 'dark') {
+    // Remove previous theme classes
+    root.classList.remove('theme-black-gold', 'theme-white-blue', 'theme-white-pink', 'dark', 'light');
+
+    // Add current theme class
+    root.classList.add(`theme-${resolved}`);
+    if (resolved === 'black-gold') {
       root.classList.add('dark');
-      root.classList.remove('light');
     } else {
       root.classList.add('light');
-      root.classList.remove('dark');
     }
 
     localStorage.setItem(THEME_STORAGE_KEY, mode);
+    localStorage.setItem(LEGACY_STORAGE_KEY, resolved === 'black-gold' ? 'dark' : 'light');
 
     // If system mode, listen for OS preference changes
     if (mode === 'system' && typeof window !== 'undefined' && window.matchMedia) {
       const media = window.matchMedia('(prefers-color-scheme: dark)');
       const listener = (e: MediaQueryListEvent) => {
-        const newTheme: ActiveTheme = e.matches ? 'dark' : 'light';
+        const newTheme: AppTheme = e.matches ? 'black-gold' : 'white-blue';
         setActiveTheme(newTheme);
-        if (newTheme === 'dark') {
+        root.classList.remove('theme-black-gold', 'theme-white-blue', 'theme-white-pink', 'dark', 'light');
+        root.classList.add(`theme-${newTheme}`);
+        if (newTheme === 'black-gold') {
           root.classList.add('dark');
-          root.classList.remove('light');
         } else {
           root.classList.add('light');
-          root.classList.remove('dark');
         }
       };
       media.addEventListener('change', listener);
@@ -74,15 +85,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [mode]);
 
   const toggleTheme = () => {
-    setModeState((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setModeState((prev) => {
+      if (prev === 'white-blue') return 'black-gold';
+      if (prev === 'black-gold') return 'white-pink';
+      return 'white-blue';
+    });
   };
 
   const setThemeMode = (newMode: ThemeMode) => {
     setModeState(newMode);
   };
 
+  const isDark = activeTheme === 'black-gold';
+
   return (
-    <ThemeContext.Provider value={{ mode, theme: activeTheme, toggleTheme, setThemeMode }}>
+    <ThemeContext.Provider value={{ mode, theme: activeTheme, isDark, toggleTheme, setThemeMode }}>
       {children}
     </ThemeContext.Provider>
   );

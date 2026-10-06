@@ -62,31 +62,31 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 
   return (
     <>
-      <header className="w-full bg-white dark:bg-[#111827] border-b border-[#D6E4F0] dark:border-[#26354A] px-4 sm:px-6 py-3 sticky top-0 z-30 shadow-sm transition-colors">
+      <header className="w-full theme-bg-card border-b theme-border px-4 sm:px-6 py-3 sticky top-0 z-30 shadow-xs transition-colors">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          {/* Brand & Mode: 🔵 Lucky House */}
+          {/* Brand & Mode: Lucky House */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full bg-[#1565C0] dark:bg-[#42A5F5] inline-block shadow-sm" />
+              <span className="w-4 h-4 rounded-full theme-text-accent inline-block shadow-xs bg-current" />
               <div>
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#1565C0] dark:text-[#64B5F6] font-heading leading-tight">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight theme-text-accent font-heading leading-tight">
                   Lucky House
                 </h1>
-                <p className="hidden md:block text-[11px] font-semibold text-[#607D8B] dark:text-[#B0BEC5] tracking-wide">
+                <p className="hidden md:block text-[11px] font-semibold theme-text-secondary tracking-wide">
                   Tambola Time - Call. Mark. Claim. Celebrate!
                 </p>
               </div>
             </div>
 
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F5FAFF] dark:bg-[#172033] border border-[#D6E4F0] dark:border-[#26354A] text-xs font-medium text-[#17324D] dark:text-[#F8FAFC]">
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full theme-bg-accent-subtle border theme-border text-xs font-medium theme-text-primary">
               {config.mode === 'physical' ? (
                 <>
-                  <FileText className="w-3.5 h-3.5 text-[#1976D2] dark:text-[#64B5F6]" />
+                  <FileText className="w-3.5 h-3.5 theme-text-accent" />
                   <span>Physical Paper</span>
                 </>
               ) : (
                 <>
-                  <Smartphone className="w-3.5 h-3.5 text-[#1976D2] dark:text-[#64B5F6]" />
+                  <Smartphone className="w-3.5 h-3.5 theme-text-accent" />
                   <span>Virtual Game</span>
                 </>
               )}
@@ -97,21 +97,21 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           <div className="flex items-center gap-2.5">
             <OfflineIndicator />
 
-            <div className="flex items-center gap-2 bg-[#F5FAFF] dark:bg-[#0B1220] px-3 py-1.5 rounded-xl border border-[#D6E4F0] dark:border-[#26354A]">
-              <span className="text-[11px] uppercase tracking-wider text-[#607D8B] dark:text-[#B0BEC5] font-semibold">
+            <div className="flex items-center gap-2 theme-bg-page px-3 py-1.5 rounded-xl border theme-border">
+              <span className="text-[11px] uppercase tracking-wider theme-text-secondary font-semibold">
                 Game:
               </span>
-              <span className="text-base font-extrabold text-[#1565C0] dark:text-[#64B5F6] font-mono-nums tracking-wider">
+              <span className="text-base font-extrabold theme-text-accent font-mono-nums tracking-wider">
                 {gameCode}
               </span>
               <button
                 type="button"
                 onClick={handleCopyCode}
                 title="Copy Game Code"
-                className="p-1 text-[#607D8B] hover:text-[#1565C0] dark:hover:text-white transition-colors cursor-pointer"
+                className="p-1 theme-text-secondary hover:theme-text-accent transition-colors cursor-pointer"
                 aria-label="Copy Game Code"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[#2E7D32]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#66BB6A]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>

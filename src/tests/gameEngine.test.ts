@@ -203,15 +203,108 @@ describe('Tambola Royal - Flexible Ranges & Family-Friendly Caller', () => {
       expect(state.calledNumbers.length).toBe(5);
     });
 
-    it('generates player tickets that conform to custom range bounds', () => {
+    it('generates player tickets that conform to custom range bounds with authentic 3x9 grid', () => {
       const range = { start: 20, end: 80 };
       const card = generatePlayerCard(1, range, 0);
 
       expect(card.allNumbers.length).toBe(15);
+      expect(card.grid.length).toBe(3);
+      expect(card.row1.length).toBe(5);
+      expect(card.row2.length).toBe(5);
+      expect(card.row3.length).toBe(5);
       card.allNumbers.forEach((n) => {
         expect(n).toBeGreaterThanOrEqual(20);
         expect(n).toBeLessThanOrEqual(80);
       });
+    });
+
+    it('generates valid authentic tickets for narrow minimum 15-number range with zero undefined values', () => {
+      const narrowRange = { start: 1, end: 15 };
+      const card = generatePlayerCard(1, narrowRange, 0);
+
+      expect(card.allNumbers.length).toBe(15);
+      expect(new Set(card.allNumbers).size).toBe(15);
+      expect(card.row1.length).toBe(5);
+      expect(card.row2.length).toBe(5);
+      expect(card.row3.length).toBe(5);
+      card.allNumbers.forEach((n) => {
+        expect(n).toBeDefined();
+        expect(typeof n).toBe('number');
+        expect(n).toBeGreaterThanOrEqual(1);
+        expect(n).toBeLessThanOrEqual(15);
+      });
+    });
+  });
+
+  describe('Fast Five Optional & Configurable Behavior', () => {
+    it('does NOT pause on the 5th number when Fast Five is disabled', () => {
+      const config: GameConfig = {
+        ...getDefaultGameConfig('physical'),
+        prizes: {
+          ...getDefaultGameConfig().prizes,
+          fastFive: { enabled: false, winners: 0 },
+        },
+      };
+
+      let state = createNewGame(config);
+      expect(state.config.prizes.fastFive.enabled).toBe(false);
+
+      for (let i = 1; i <= 5; i++) {
+        const res = callNextNumber(state);
+        state = res.nextState;
+      }
+
+      // Must proceed directly without pausing
+      expect(state.status).toBe('playing');
+      expect(state.status).not.toBe('firstFivePaused');
+      expect(state.calledNumbers.length).toBe(5);
+    });
+
+    it('reports Fast Five as unavailable when disabled', () => {
+      const config: GameConfig = {
+        ...getDefaultGameConfig('physical'),
+        prizes: {
+          ...getDefaultGameConfig().prizes,
+          fastFive: { enabled: false, winners: 0 },
+        },
+      };
+      const state = createNewGame(config);
+      expect(isPrizeAvailable(state, 'fastFive')).toBe(false);
+    });
+
+    it('supports configurable winner count for Fast Five when enabled', () => {
+      const config: GameConfig = {
+        ...getDefaultGameConfig('physical'),
+        prizes: {
+          ...getDefaultGameConfig().prizes,
+          fastFive: { enabled: true, winners: 2 },
+        },
+      };
+      let state = createNewGame(config);
+      expect(isPrizeAvailable(state, 'fastFive')).toBe(true);
+
+      // Record first winner
+      state = recordWinner(state, 'Player 1', 'fastFive');
+      expect(isPrizeAvailable(state, 'fastFive')).toBe(true);
+
+      // Record second winner
+      state = recordWinner(state, 'Player 2', 'fastFive');
+      expect(isPrizeAvailable(state, 'fastFive')).toBe(false);
+    });
+
+    it('does not detect Fast Five victory when Fast Five is disabled in game config', () => {
+      const disabledConfig: GameConfig = {
+        ...getDefaultGameConfig('physical'),
+        prizes: {
+          ...getDefaultGameConfig().prizes,
+          fastFive: { enabled: false, winners: 0 },
+        },
+      };
+      const card = generatePlayerCard(1, { start: 1, end: 90 }, 0);
+      const fiveMatches = card.allNumbers.slice(0, 5);
+
+      const res = verifyCardAchievement(card, 'fastFive', fiveMatches, disabledConfig);
+      expect(res.completed).toBe(false);
     });
   });
 });

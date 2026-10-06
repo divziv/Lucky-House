@@ -56,15 +56,15 @@ export const Setup: React.FC<SetupProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 dark:bg-slate-950 light:bg-slate-100 text-slate-100 dark:text-slate-100 light:text-slate-900 py-8 px-4 sm:px-6 transition-colors">
+    <div className="min-h-screen theme-bg-page theme-text-primary py-8 px-4 sm:px-6 transition-colors">
       <div className="max-w-3xl mx-auto">
         {/* Setup Top Navigation */}
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b theme-border">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-black font-heading text-white dark:text-white light:text-slate-900">
-              Lucky <span className="text-amber-500">House</span> Setup
+            <span className="text-lg font-black font-heading theme-text-primary">
+              Lucky <span className="theme-text-accent">House</span> Setup
             </span>
-            <span className="hidden sm:inline-block text-xs font-semibold text-amber-500/90 dark:text-amber-400 light:text-amber-600 bg-amber-500/10 px-2.5 py-0.5 rounded-full">
+            <span className="hidden sm:inline-block text-xs font-semibold theme-text-accent theme-bg-accent-subtle px-2.5 py-0.5 rounded-full border theme-border">
               Custom Game Wizard
             </span>
           </div>
@@ -85,7 +85,7 @@ export const Setup: React.FC<SetupProps> = ({
         />
 
         {/* Wizard Step Content Container */}
-        <div className="bg-slate-900/90 dark:bg-slate-900/90 light:bg-white border border-slate-800 dark:border-slate-800 light:border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md mb-8 transition-colors">
+        <div className="theme-bg-card border theme-border rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md mb-8 transition-colors">
           {currentStep === 1 && (
             <GameModeSelector
               selectedMode={config.mode}
@@ -136,7 +136,7 @@ export const Setup: React.FC<SetupProps> = ({
           </Button>
 
           {currentStep < 6 ? (
-            <Button variant="gold" size="lg" onClick={handleNext}>
+            <Button variant="primary" size="lg" onClick={handleNext}>
               <span>Next</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
@@ -145,7 +145,7 @@ export const Setup: React.FC<SetupProps> = ({
               variant="gold"
               size="lg"
               onClick={handleFinish}
-              className="text-slate-950 font-black px-8 shadow-xl shadow-amber-500/30"
+              className="font-black px-8 shadow-xl"
             >
               <Play className="w-5 h-5 fill-current" />
               <span>START GAME</span>

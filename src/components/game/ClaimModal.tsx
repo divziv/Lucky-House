@@ -18,15 +18,15 @@ export const ClaimModal: React.FC<ClaimModalProps> = ({
   gameState,
   onConfirmWinner,
 }) => {
-  const [playerName, setPlayerName] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<PrizeCategory>('firstLine');
-  const [ticketNum, setTicketNum] = useState('');
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
-
   const config = gameState.config;
   const categories = (Object.keys(config.prizes) as PrizeCategory[]).filter(
-    (c) => config.prizes[c] > 0
+    (c) => config.prizes[c]?.enabled && config.prizes[c]?.winners > 0
   );
+
+  const [playerName, setPlayerName] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<PrizeCategory>(() => categories[0] || 'firstLine');
+  const [ticketNum, setTicketNum] = useState('');
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string>('');
 
   const isAvailable = isPrizeAvailable(gameState, selectedCategory);
 

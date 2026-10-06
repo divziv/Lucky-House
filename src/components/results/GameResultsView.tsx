@@ -176,20 +176,23 @@ export const GameResultsView: React.FC<GameResultsViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {categories.map((cat) => {
             const catWinners = state.winners.filter((w) => w.category === cat);
-            const isConfigured = state.config.prizes[cat] > 0;
+            const prizeItem = state.config.prizes[cat];
+            const isConfigured = Boolean(prizeItem?.enabled && prizeItem.winners > 0);
             if (!isConfigured && catWinners.length === 0) return null;
+
+            const maxWinners = prizeItem?.winners || 0;
 
             return (
               <div
                 key={cat}
-                className="p-4 rounded-2xl bg-slate-950/70 dark:bg-slate-950/70 light:bg-slate-50 border border-slate-800/80 dark:border-slate-800/80 light:border-slate-200 flex flex-col justify-between"
+                className="p-4 rounded-2xl bg-white/5 border border-slate-700/40 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-amber-500 dark:text-amber-400 light:text-amber-700">
+                  <span className="text-sm font-bold text-amber-500">
                     {PRIZE_LABELS[cat]}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 light:text-slate-500 font-mono-nums">
-                    {catWinners.length} / {state.config.prizes[cat]} won
+                  <span className="text-xs opacity-75 font-mono-nums">
+                    {catWinners.length} / {maxWinners} won
                   </span>
                 </div>
 
@@ -198,19 +201,19 @@ export const GameResultsView: React.FC<GameResultsViewProps> = ({
                     {catWinners.map((winner, idx) => (
                       <div
                         key={winner.id}
-                        className="p-2.5 rounded-xl bg-slate-900/80 dark:bg-slate-900/80 light:bg-white border border-slate-800 dark:border-slate-800 light:border-slate-200 flex items-center justify-between text-xs shadow-sm"
+                        className="p-2.5 rounded-xl bg-white/5 border border-slate-700/30 flex items-center justify-between text-xs shadow-xs"
                       >
-                        <span className="font-bold text-white dark:text-white light:text-slate-900 text-sm">
+                        <span className="font-bold text-sm">
                           {idx + 1}. {winner.playerName}
                         </span>
-                        <span className="text-slate-400 dark:text-slate-400 light:text-slate-600 font-mono-nums">
+                        <span className="opacity-75 font-mono-nums">
                           Won on number #{winner.numberWhenWon}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-xs text-slate-500 italic py-2">
+                  <div className="text-xs opacity-50 italic py-2">
                     Unclaimed prize
                   </div>
                 )}

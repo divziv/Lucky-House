@@ -120,23 +120,47 @@ export class VoiceService {
       `The game is being played with numbers from ${config.numberRange.start} to ${config.numberRange.end}.`,
     ];
 
-    if (config.prizes.fastFive > 0) {
-      sentences.push('Fast Five has one winner.');
+    if (config.prizes.fastFive?.enabled && config.prizes.fastFive.winners > 0) {
+      sentences.push(
+        `Fast Five has ${config.prizes.fastFive.winners} ${
+          config.prizes.fastFive.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
-    if (config.prizes.firstLine > 0) {
-      sentences.push(`First Line has ${config.prizes.firstLine} ${config.prizes.firstLine === 1 ? 'winner' : 'winners'}.`);
+    if (config.prizes.firstLine?.enabled && config.prizes.firstLine.winners > 0) {
+      sentences.push(
+        `First Line has ${config.prizes.firstLine.winners} ${
+          config.prizes.firstLine.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
-    if (config.prizes.secondLine > 0) {
-      sentences.push(`Second Line has ${config.prizes.secondLine} ${config.prizes.secondLine === 1 ? 'winner' : 'winners'}.`);
+    if (config.prizes.secondLine?.enabled && config.prizes.secondLine.winners > 0) {
+      sentences.push(
+        `Second Line has ${config.prizes.secondLine.winners} ${
+          config.prizes.secondLine.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
-    if (config.prizes.thirdLine > 0) {
-      sentences.push(`Third Line has ${config.prizes.thirdLine} ${config.prizes.thirdLine === 1 ? 'winner' : 'winners'}.`);
+    if (config.prizes.thirdLine?.enabled && config.prizes.thirdLine.winners > 0) {
+      sentences.push(
+        `Third Line has ${config.prizes.thirdLine.winners} ${
+          config.prizes.thirdLine.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
-    if (config.prizes.fullHouse > 0) {
-      sentences.push(`Full House has ${config.prizes.fullHouse} ${config.prizes.fullHouse === 1 ? 'winner' : 'winners'}.`);
+    if (config.prizes.fullHouse?.enabled && config.prizes.fullHouse.winners > 0) {
+      sentences.push(
+        `Full House has ${config.prizes.fullHouse.winners} ${
+          config.prizes.fullHouse.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
-    if (config.prizes.lastFive > 0) {
-      sentences.push(`Last Five has ${config.prizes.lastFive} ${config.prizes.lastFive === 1 ? 'winner' : 'winners'}.`);
+    if (config.prizes.lastFive?.enabled && config.prizes.lastFive.winners > 0) {
+      sentences.push(
+        `Last Five has ${config.prizes.lastFive.winners} ${
+          config.prizes.lastFive.winners === 1 ? 'winner' : 'winners'
+        }.`
+      );
     }
 
     if (config.lineWinnerFullHouseEligibility) {
@@ -146,7 +170,11 @@ export class VoiceService {
     }
 
     sentences.push('Note that a player who wins one line cannot claim another line on the same card.');
-    sentences.push('After five numbers are called, the game will pause so players can check their cards.');
+
+    if (config.prizes.fastFive?.enabled && config.prizes.fastFive.winners > 0) {
+      sentences.push('After five numbers are called, the game will pause so players can check their cards for Fast Five.');
+    }
+
     sentences.push('Good luck, and enjoy the game!');
 
     this.speakText(sentences.join(' '), onEnd);

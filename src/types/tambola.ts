@@ -1,3 +1,6 @@
+export type AppTheme = 'black-gold' | 'white-blue' | 'white-pink';
+export type ThemeMode = AppTheme | 'system';
+
 export type GameMode = 'physical' | 'virtual';
 
 export interface NumberRange {
@@ -15,13 +18,18 @@ export type PrizeCategory =
   | 'fullHouse'
   | 'lastFive';
 
+export interface PrizeCategoryConfig {
+  enabled: boolean;
+  winners: number;
+}
+
 export interface PrizeConfig {
-  fastFive: number; // always max 1
-  firstLine: number;
-  secondLine: number;
-  thirdLine: number;
-  fullHouse: number;
-  lastFive: number; // optional, 0 = disabled
+  fastFive: PrizeCategoryConfig;
+  firstLine: PrizeCategoryConfig;
+  secondLine: PrizeCategoryConfig;
+  thirdLine: PrizeCategoryConfig;
+  fullHouse: PrizeCategoryConfig;
+  lastFive: PrizeCategoryConfig;
 }
 
 export interface VoiceSettings {
